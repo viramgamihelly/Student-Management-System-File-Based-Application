@@ -1,0 +1,47 @@
+Student Management System — File-Based Application
+
+You have already built a basic student management system using lists and functions in Week 2. Now upgrade that project using everything you've learned in Week 4.
+
+
+
+Project requirements
+Feature	Concepts to apply
+Add student	Functions, file handling
+View all students	File reading
+Search student by roll number	Functions, file handling
+Update student details	File handling
+Delete student	File handling
+Validate marks	Exception handling
+Handle invalid inputs	Custom exceptions
+Calculate average marks	Modules
+Log user actions	Decorators
+Read student records	Generators
+Install dependencies	pip and venv
+Upload project	Git and GitHub
+
+Suggested folder structure
+StudentManagementSystem/
+│
+├── main.py
+├── student.py
+├── file_handler.py
+├── validators.py
+├── decorators.py
+│
+├── data/
+│   └── students.csv
+│
+├── requirements.txt
+├── README.md
+└── .gitignore
+
+
+Rules for completing this project
+1. Don't write the entire application in one Python file.
+2. Separate responsibilities into modules.
+3. Handle possible errors properly.
+4. Use with open() for file operations.
+5. Use decorators for logging.
+6. Use generators where appropriate.
+7. Keep your code readable and use meaningful names.
+8. Push your final working version to GitHub.
