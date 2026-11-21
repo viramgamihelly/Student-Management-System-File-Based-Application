@@ -11,7 +11,6 @@ import csv
 
 filename=r"C:\Users\Dell\Documents\CLG NOTESSSSSSS\EXTRA\week4-project\data\student.csv"
 
-
 def add_student():
     num=int(input("Enter the number of students to add: "))
 
@@ -36,7 +35,6 @@ def add_student():
 
     print("Data saved !")
     print("-"*30)
-
 
 def view_students():
     print("\t---DISPLAYING STUDENT DETAILS---")
@@ -63,8 +61,55 @@ def search_student():
                 print(f"Marks: {row[2]}")
 
         if found==False:
-            print("Student having roll number:{roll} not found !")
+            print(f"Student having roll number:{roll} not found !")
 
+def update_student():
+    roll=input("Enter the student roll number you want to update: ")
+    exists=False
+    update=[]
+    with open(filename,"r",newline="") as file:
+        read=csv.reader(file)
+
+        for row in read:
+            if row[1]==roll:
+                exists=True
+                print("update the details here:")
+                name=input("Enter Student name: ").capitalize()
+                marks=float(input("Enter Sutudent marks(0-100): "))
+                row[0]=name
+                row[2]=marks
+            update.append(row)
+
+    if exists:
+        with open(filename,"w",newline="") as file:
+            write=csv.writer(file)
+            write.writerows(update)
+
+            print("Details updated!")
+    else:
+        print("student not found!")
+
+def delete_student():
+    roll=input("Enter the roll number you want to delete: ")
+    exists=False
+    updated=[]
+    with open(filename,"r",newline="") as file:
+        read=csv.reader(file)
+
+        for row in read:
+            if row[1]==roll:
+                exists=True
+                print(f"student of roll no {roll} deleted!")
+            else:
+                updated.append(row)
+
+    if exists:
+        with open(filename, "w", newline="") as file:
+            write = csv.writer(file)
+            write.writerows(updated)
+        print("Student record deleted successfully!")
+    else:
+        print("Student not found !")
 
 
 # ---test purpose function
