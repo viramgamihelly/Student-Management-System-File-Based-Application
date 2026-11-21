@@ -17,8 +17,15 @@ def add_student():
 
     for i in range(num):
         name=input("Enter Student name: ").capitalize()
-        roll=int(input("Enter Student roll number: "))
+        roll=input("Enter Student roll number: ")
         marks=float(input("Enter Sutudent marks(0-100): "))
+
+        with open(filename,"r",newline="") as file:
+            read=csv.reader(file)
+            for row in read:
+                if row[1]==roll:
+                    print("Student with this roll number already exists!")
+                    return
 
         with open(filename,"a",newline="") as file:
             write=csv.writer(file)
@@ -40,19 +47,34 @@ def view_students():
             print(f"{row[0]:<30}{row[1]:<15}{row[2]:<10}")
         print("-" * 45)
 
+def search_student():
+    roll=input("Enter Student roll number to search: ")
+
+    with open(filename,"r",newline="") as file:
+        read=csv.reader(file)
+        found=False
+        for row in read:
+            if row[1]==roll:
+                found=True
+                print("Student found")
+                print("Student details:")
+                print(f"Name: {row[0]}")
+                print(f"Roll Number: {row[1]}")
+                print(f"Marks: {row[2]}")
+
+        if found==False:
+            print("Student having roll number:{roll} not found !")
 
 
 
-    
-
-#---test purpose function
-# def read_csv():
-#     try:
-#         with open(filename,"r") as file:
-#             r=csv.reader(file)
-#             for i in r:
-#                 print(i)
-#     except FileNotFoundError:
-#         print("file not found")
+# ---test purpose function
+def read_csv():
+    try:
+        with open(filename,"r") as file:
+            r=csv.reader(file)
+            for i in r:
+                print(i[2])
+    except FileNotFoundError:
+        print("file not found")
 
 # read_csv()
