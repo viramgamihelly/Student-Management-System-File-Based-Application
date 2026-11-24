@@ -111,6 +111,19 @@ def delete_student():
     else:
         print("Student not found !")
 
+def calculate_average():
+    with open(filename,"r",newline="") as file:
+        rows=csv.reader(file)
+        avg=0
+        count=0
+        for row in rows:
+            avg+= int(row[2])
+            count+=1
+
+        average=avg/count
+        print(f"The average of {count} students out of 100 marks is {average}")
+
+calculate_average()
 
 # ---test purpose function
 def read_csv():
@@ -118,7 +131,7 @@ def read_csv():
         with open(filename,"r") as file:
             r=csv.reader(file)
             for i in r:
-                print(i[2])
+                print(type(i[2]))
     except FileNotFoundError:
         print("file not found")
 
