@@ -123,7 +123,15 @@ def calculate_average():
         average=avg/count
         print(f"The average of {count} students out of 100 marks is {average}")
 
-calculate_average()
+def students_above_75():
+    with open(filename,"r",newline="") as file:
+        rows=csv.reader(file)
+        print(f"---THE DETAILS STUDENTS WHOSE MARKS ARE ABOVE 75---")
+        print(f"{'Name':<30}{'Roll No':<15}{'Marks':<10}")
+        for row in rows:
+            if int(row[2])>75:
+                print(f"{row[0]:<30}{row[1]:<15}{row[2]:<10}")
+        print("-" * 45)
 
 # ---test purpose function
 def read_csv():
