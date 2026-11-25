@@ -11,12 +11,15 @@ import csv
 
 filename=r"C:\Users\Dell\Documents\CLG NOTESSSSSSS\EXTRA\week4-project\data\student.csv"
 
+# [name,roll,course,marks]
+
 def add_student():
     num=int(input("Enter the number of students to add: "))
 
     for i in range(num):
         name=input("Enter Student name: ").capitalize()
         roll=input("Enter Student roll number: ")
+        course=input("Enter Student course: ").capitalize()
         marks=float(input("Enter Sutudent marks(0-100): "))
 
         with open(filename,"r",newline="") as file:
@@ -29,7 +32,7 @@ def add_student():
         with open(filename,"a",newline="") as file:
             write=csv.writer(file)
 
-            write.writerow([name,roll,marks])
+            write.writerow([name,roll,course,marks])
 
         print(f"Student {name} added")
 
@@ -40,10 +43,10 @@ def view_students():
     print("\t---DISPLAYING STUDENT DETAILS---")
     with open(filename,"r",newline="") as file:
         read=csv.reader(file)
-        print(f"{'Name':<30}{'Roll No':<15}{'Marks':<10}")
+        print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
         for row in read:
-            print(f"{row[0]:<30}{row[1]:<15}{row[2]:<10}")
-        print("-" * 45)
+            print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
+        print("-" * 100)
 
 def search_student():
     roll=input("Enter Student roll number to search: ")
@@ -58,7 +61,8 @@ def search_student():
                 print("Student details:")
                 print(f"Name: {row[0]}")
                 print(f"Roll Number: {row[1]}")
-                print(f"Marks: {row[2]}")
+                print(f"Course: {row[2]}")
+                print(f"Marks: {row[3]}")
 
         if found==False:
             print(f"Student having roll number:{roll} not found !")
@@ -75,9 +79,11 @@ def update_student():
                 exists=True
                 print("update the details here:")
                 name=input("Enter Student name: ").capitalize()
+                course=input("Enter Student Course: ").capitalize()
                 marks=float(input("Enter Sutudent marks(0-100): "))
                 row[0]=name
-                row[2]=marks
+                row[2]=course
+                row[3]=marks
             update.append(row)
 
     if exists:
@@ -127,20 +133,8 @@ def students_above_75():
     with open(filename,"r",newline="") as file:
         rows=csv.reader(file)
         print(f"---THE DETAILS STUDENTS WHOSE MARKS ARE ABOVE 75---")
-        print(f"{'Name':<30}{'Roll No':<15}{'Marks':<10}")
+        print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
         for row in rows:
             if int(row[2])>75:
-                print(f"{row[0]:<30}{row[1]:<15}{row[2]:<10}")
+                print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
         print("-" * 45)
-
-# ---test purpose function
-def read_csv():
-    try:
-        with open(filename,"r") as file:
-            r=csv.reader(file)
-            for i in r:
-                print(type(i[2]))
-    except FileNotFoundError:
-        print("file not found")
-
-# read_csv()
