@@ -7,11 +7,11 @@
 # calculate_average()	Calculate average marks
 # students_above_75()   Display students scoring above 75
 
+# [name,roll,course,marks]
+
 import csv
 
 filename=r"C:\Users\Dell\Documents\CLG NOTESSSSSSS\EXTRA\week4-project\data\student.csv"
-
-# [name,roll,course,marks]
 
 def add_student():
     num=int(input("Enter the number of students to add: "))
@@ -97,25 +97,30 @@ def update_student():
 
 def delete_student():
     roll=input("Enter the roll number you want to delete: ")
+    choice=input("Are you sure you want to delete Student(Yes/No)? : ").capitalize()
     exists=False
     updated=[]
-    with open(filename,"r",newline="") as file:
-        read=csv.reader(file)
+    if choice=="Yes":
+        with open(filename,"r",newline="") as file:
+            read=csv.reader(file)
 
-        for row in read:
-            if row[1]==roll:
-                exists=True
-                print(f"student of roll no {roll} deleted!")
-            else:
-                updated.append(row)
+            for row in read:
+                if row[1]==roll:
+                    exists=True
+                    print(f"student of roll no {roll} deleted!")
+                else:
+                    updated.append(row)
 
-    if exists:
-        with open(filename, "w", newline="") as file:
-            write = csv.writer(file)
-            write.writerows(updated)
-        print("Student record deleted successfully!")
+        if exists:
+            with open(filename, "w", newline="") as file:
+                write = csv.writer(file)
+                write.writerows(updated)
+            print("Student record deleted successfully!")
+        else:
+            print("Student not found !")
+
     else:
-        print("Student not found !")
+        print("Operation Aborted")
 
 def calculate_average():
     with open(filename,"r",newline="") as file:
@@ -123,7 +128,7 @@ def calculate_average():
         avg=0
         count=0
         for row in rows:
-            avg+= int(row[2])
+            avg+= float(row[3])
             count+=1
 
         average=avg/count
@@ -135,8 +140,6 @@ def students_above_75():
         print(f"---THE DETAILS STUDENTS WHOSE MARKS ARE ABOVE 75---")
         print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
         for row in rows:
-            if int(row[2])>75:
+            if float(row[3])>75:
                 print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
         print("-" * 45)
-
-view_students()
