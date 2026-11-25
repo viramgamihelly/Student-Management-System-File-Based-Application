@@ -138,3 +138,5 @@ def students_above_75():
             if int(row[2])>75:
                 print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
         print("-" * 45)
+
+view_students()
