@@ -7,3 +7,4 @@
 [LOG] view_students function called
 [LOG] search_student function called
 [LOG] students_above_75 function called
+[LOG] add_student function called

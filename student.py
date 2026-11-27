@@ -10,15 +10,23 @@
 # [name,roll,course,marks]
 from decorators import log_activity
 from validators import validate_marks,InvalidMarksError
-from file_handler import read_students, filtered_students_above_75, filename
+from file_handler import read_students,save_students ,filtered_students_above_75,add_student_record ,filename
 import csv
 
 # filename=r"C:\Users\Dell\Documents\CLG NOTESSSSSSS\EXTRA\week4-project\data\student.csv"
 
 @log_activity
 def add_student():
-    num=int(input("Enter the number of students to add: "))
+    while True:
+        try:
+            num=int(input("Enter the number of students to add: "))
+            if num<=0:
+                print("Please enter a positive number!")
+                continue
 
+            break
+        except ValueError as e:
+            print(f"Error occured: {e}")
     for i in range(num):
         name=input("Enter Student name: ").capitalize()
         roll=input("Enter Student roll number: ")
@@ -34,29 +42,22 @@ def add_student():
 
         exists=False
 
-        try:
-            with open(filename,"r",newline="") as file:
-                read=csv.reader(file)
-                for row in read:
-                    if row[1]==roll:
-                        exists=True
-                        break
-        except FileNotFoundError:
-            exists=False
-
+        for row in read_students():
+            if row[1]==roll:
+                exists=True
+                break
+    
         if exists:
             print("Student with this roll number already exists!")
             continue
 
-        with open(filename,"a",newline="") as file:
-            write=csv.writer(file)
-
-            write.writerow([name,roll,course,marks])
+        add_student_record([name, roll, course, marks])
 
         print(f"Student {name} added")
 
     print("Data saved !")
     print("-"*30)
+add_student()
 
 @log_activity
 def view_students():
@@ -121,11 +122,8 @@ def update_student():
         update.append(row)
 
     if exists:
-        with open(filename,"w",newline="") as file:
-            write=csv.writer(file)
-            write.writerows(update)
-
-            print("Details updated!")
+        save_students(update)
+        print("Details updated!")
     else:
         print("student not found!")
 
@@ -142,11 +140,8 @@ def delete_student():
                 exists=True
             else:
                 updated.append(row)
-        
-        if exists:
-            with open(filename, "w", newline="") as file:
-                write = csv.writer(file)
-                write.writerows(updated)
+        if exists:    
+            save_students(updated)
             print("Student record deleted successfully!")
         else:
             print("Student not found !")
