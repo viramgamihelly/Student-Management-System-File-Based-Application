@@ -57,7 +57,6 @@ def add_student():
 
     print("Data saved !")
     print("-"*30)
-add_student()
 
 @log_activity
 def view_students():
