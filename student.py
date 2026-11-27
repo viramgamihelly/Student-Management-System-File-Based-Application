@@ -10,9 +10,10 @@
 # [name,roll,course,marks]
 from decorators import log_activity
 from validators import validate_marks,InvalidMarksError
+from file_handler import read_students, filtered_students_above_75, filename
 import csv
 
-filename=r"C:\Users\Dell\Documents\CLG NOTESSSSSSS\EXTRA\week4-project\data\student.csv"
+# filename=r"C:\Users\Dell\Documents\CLG NOTESSSSSSS\EXTRA\week4-project\data\student.csv"
 
 @log_activity
 def add_student():
@@ -60,42 +61,39 @@ def add_student():
 @log_activity
 def view_students():
     print("\t---DISPLAYING STUDENT DETAILS---")
-    try:
-        with open(filename,"r",newline="") as file:
-            read=csv.reader(file)
-            found=False
-            print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
-            for row in read:
-                found=True
-                print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
-            print("-" * 100)
-            if found==False:
-                print("no records found")
-    except FileNotFoundError:
-        print("file not found")
+
+    found = False
+
+    print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
+
+    for row in read_students():
+        found = True
+        print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
+
+    if not found:
+        print("No student records found!")
+
+    print("-" * 100)
 
 @log_activity
 def search_student():
-    roll=input("Enter Student roll number to search: ")
-    try:
-        with open(filename,"r",newline="") as file:
-            read=csv.reader(file)
-            found=False
-            for row in read:
-                if row[1]==roll:
-                    found=True
-                    print("Student found")
-                    print("Student details:")
-                    print(f"Name: {row[0]}")
-                    print(f"Roll Number: {row[1]}")
-                    print(f"Course: {row[2]}")
-                    print(f"Marks: {row[3]}")
-                    break
+    roll = input("Enter Student roll number to search: ")
 
-            if found==False:
-                print(f"Student having roll number:{roll} not found !")
-    except FileNotFoundError:
-        print("File not found")
+    found = False
+
+    for row in read_students():
+        if row[1] == roll:
+            found = True
+            print("Student found!")
+            print("Student details:")
+            print(f"Name: {row[0]}")
+            print(f"Roll Number: {row[1]}")
+            print(f"Course: {row[2]}")
+            print(f"Marks: {row[3]}")
+            break
+
+    if not found:
+        print(f"Student having roll number {roll} not found!")
 
 @log_activity
 def update_student():
@@ -103,32 +101,24 @@ def update_student():
     exists=False
     update=[]
 
-    try:
-        with open(filename,"r",newline="") as file:
-            read=csv.reader(file)
+    for row in read_students():
+        if row[1]==roll:
+            exists=True
+            print("update the details here:")
+            name=input("Enter Student name: ").capitalize()
+            course=input("Enter Student Course: ").capitalize()
+            while True:
+                try:
+                    marks = validate_marks(input("Enter Student marks (0-100): "))
+                    break
 
-            for row in read:
-                if row[1]==roll:
-                    exists=True
-                    print("update the details here:")
-                    name=input("Enter Student name: ").capitalize()
-                    course=input("Enter Student Course: ").capitalize()
-                    while True:
-                        try:
-                            marks = validate_marks(input("Enter Student marks (0-100): "))
-                            break
-
-                        except InvalidMarksError as e:
-                            print(e)
-                            print("Please enter marks again.")
-                    row[0]=name
-                    row[2]=course
-                    row[3]=marks
-                update.append(row)
-
-    except FileNotFoundError:
-        print("File not found")
-        return
+                except InvalidMarksError as e:
+                    print(e)
+                    print("Please enter marks again.")
+            row[0]=name
+            row[2]=course
+            row[3]=marks
+        update.append(row)
 
     if exists:
         with open(filename,"w",newline="") as file:
@@ -146,18 +136,12 @@ def delete_student():
     exists=False
     updated=[]
     if choice=="Yes":
-        try:
-            with open(filename,"r",newline="") as file:
-                read=csv.reader(file)
 
-                for row in read:
-                    if row[1]==roll:
-                        exists=True
-                    else:
-                        updated.append(row)
-        except FileNotFoundError:
-            print("File not found")
-            return
+        for row in read_students():
+            if row[1]==roll:
+                exists=True
+            else:
+                updated.append(row)
         
         if exists:
             with open(filename, "w", newline="") as file:
@@ -172,40 +156,29 @@ def delete_student():
 
 @log_activity
 def calculate_average():
-    try:
-        with open(filename,"r",newline="") as file:
-            rows=csv.reader(file)
-            avg=0
-            count=0
-            for row in rows:
-                avg+= float(row[3])
-                count+=1
+    avg=0
+    count=0
+    for row in read_students():
+        avg+= float(row[3])
+        count+=1
 
-            if count > 0:
-                average = avg / count
-                print(f"The average of {count} students out of 100 marks is {average}")
-            else:
-                print("NO RECORDS FOUND")
-
-    except FileNotFoundError:
-        print("File not found")
+    if count > 0:
+        average = avg / count
+        print(f"The average of {count} students out of 100 marks is {average}")
+    else:
+        print("NO RECORDS FOUND")
 
 @log_activity
 def students_above_75():
-    try:
-        with open(filename,"r",newline="") as file:
-            found=False
-            rows=csv.reader(file)
-            print(f"---THE DETAILS STUDENTS WHOSE MARKS ARE ABOVE 75---")
-            print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
-            for row in rows:
-                if float(row[3])>75:
-                    found=True
-                    print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
-            print("-" * 85)
+    found=False
+    print(f"---THE DETAILS STUDENTS WHOSE MARKS ARE ABOVE 75---")
+    print(f"{'Name':<30}{'Roll No':<15}{'Course':<30}{'Marks':<10}")
+    for row in filtered_students_above_75():
+        found=True
+        print(f"{row[0]:<30}{row[1]:<15}{row[2]:<30}{row[3]:<10}")
+    print("-" * 85)
 
-            if not found:
-                print("NO STUDENT WITH ABOVE 75 MARKS")
-    except FileNotFoundError:
-        print("FILE NOT FOUND")
+    if not found:
+        print("NO STUDENT WITH ABOVE 75 MARKS")
+    
 
